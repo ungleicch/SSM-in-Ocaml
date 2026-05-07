@@ -13,6 +13,8 @@ let mat_add a b =
   let r = Array.length a and c = Array.length a.(0) in
   Array.init r (fun i -> Array.init c (fun j -> a.(i.(j) +. b.(i).(j)))
 
+let mat_scale s m = Array.map (Array.map ((*.)s))m
+
 (* matrix multiplicaiton / using ikj loop more cache ef*)
 let mat_mul a b =
   let r = Array.length a
@@ -30,10 +32,19 @@ let mat_mul a b =
   done;
   out
 
+let mat_vec a b =
+  let r = Array.length a and c = Array.length v in
+  Array.init r (fun i ->
+  let s = ref 0. in
+  for j = 0 to c - 1 do
+  s := !s +. a.(i).(j) *. v.(j)
+  done;
+  !s)
 
-let mat_vec = (**)
+let mat_t m =
+  let r = Array.length m and c
 
-let vec_add = (**)
+
 let vec_scale = (**)
 let vec_dot = (**)
 
