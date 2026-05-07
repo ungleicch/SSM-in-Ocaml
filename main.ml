@@ -13,7 +13,23 @@ let mat_add a b =
   let r = Array.length a and c = Array.length a.(0) in
   Array.init r (fun i -> Array.init c (fun j -> a.(i.(j) +. b.(i).(j)))
 
-let mat_mul = (**)
+(* matrix multiplicaiton / using ikj loop more cache ef*)
+let mat_mul a b =
+  let r = Array.length a
+  and k = Array.length b
+  and c = Array.length b in
+  let out = mat_zeros r c in
+  for i = 0 to r - 1 do
+    for p = 0 to k - 1 do
+      let aip = a.(i).(p) in
+      if aip <> 0. then
+        for j = 0 to c - 1 do
+          out.(i).(j) <- out.(i).(j) +. aip *. b.(p).(j)
+        done
+    done
+  done;
+  out
+
 
 let mat_vec = (**)
 
