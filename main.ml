@@ -94,10 +94,23 @@ if i > j then -. sqrt (float_of_int ((2*i+1) * (2*j+1)))
 else if i = j then -. float_of_int (i+1)
 else 0.))
 
-type ssm = (**)
-type linear = (**)
+type ssm = {
+  mutable log_delta : float;
+  a_cont : float array array;
+  mutable b : float array;
+  mutable c : float array;
+  n : int;
+  }
 
-let make_ssm  = (**)
+let make_ssm n =
+let s = 1. /. sqrt (float_of_int n) in
+{log_delta = log 0.001;
+  a_cont = hippo n;
+  b = rand_v n s;
+  c = rand_v n s;
+  n
+  }
+
 
 let discretize = (**)
 
