@@ -13,7 +13,7 @@ let mat_add a b =
   let r = Array.length a and c = Array.length a.(0) in
   Array.init r (fun i -> Array.init c (fun j -> a.(i.(j) +. b.(i).(j)))
 
-let mat_scale s m = Array.map (Array.map ((*.)s))m
+let mat_scale s m = Array.map (Array.map (( *. ) s)) m
 
 (* matrix multiplicaiton / using ikj loop more cache ef*)
 let mat_mul a b =
@@ -42,15 +42,30 @@ let mat_vec a b =
   !s)
 
 let mat_t m =
-  let r = Array.length m and c
+  let r = Array.length m and c = Array.length m.(0) in
+  Array.init c (fun j -> Array.init r (fun i -> m.(i).(j)))
+
+let vec_add a b = Array.init (Array.length a) (fun i -> a.(i) +. b.(i))
 
 
-let vec_scale = (**)
-let vec_dot = (**)
+let vec_scale v s = Array.map ((*.)s)v
 
-let argmax = (**)
+let vec_dot a b =
+let s = ref 0. in
+Array.iteri (fun i x -> s := !s +. x *. b.(i)) a;
 
-let mat_exp = (**)
+let outer u v =
+Array.init (Array.length u) (fun i ->
+  Array.init (Array.length v) (fun j -> u.(i) *. v.(j)))
+
+
+let argmax v =
+Array.flod_left (fun m i -> if v.(i) > v.(m) then i else m) 0
+  (Array.init (Array.length v) Fun.id)
+
+
+let mat_exp a =
+let n = Array.length a in
 
 let randn = (**)
 
