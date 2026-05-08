@@ -51,7 +51,7 @@ let mat_t m =
 let vec_add a b = Array.init (Array.length a) (fun i -> a.(i) +. b.(i))
 
 (* scale every element of vec v  by scalar s *)
-let vec_scale s v = Array.map ((*.)s)v
+let vec_scale s v = Array.map (( *. ) s) v;
 
 (* Dot product *)
 let vec_dot a b =
