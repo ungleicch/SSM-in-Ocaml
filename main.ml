@@ -66,8 +66,24 @@ Array.flod_left (fun m i -> if v.(i) > v.(m) then i else m) 0
 
 let mat_exp a =
 let n = Array.length a in
+let norm = Array.fold_left (fun mx row ->
+  max mx (Array.fold_left (fun s x -> s +. abs_float x) 0. row)) 0. a in
+let s = max 0 (int_of_float (ceil(log (max 1. norm) /. log 2.))) in
+let sc = 2. ** float_of_int s in
+let a = mat_scale (1. /. sc) a in
+let r = ref (mat_id n) in
+let k = ref (mat_id n) in
+for k = 1 to 20 do
+t := mat_scale (1. /. float_of_int k) (mat_mul !t a);
+r := mat_add !r !t
+done;
+for _= 1 to s do r := mat_mul !r !r done;
+!r
 
-let randn = (**)
+let () = Random.self_init ()
+let randn () =
+let u = max Float.epsilon (Random.float 1.) in
+sqrt (-2 *. log u) *. cos (2. *. Float.pi *. (Random.float 1.))
 
 
 type ssm = (**)
