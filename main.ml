@@ -85,6 +85,14 @@ let randn () =
 let u = max Float.epsilon (Random.float 1.) in
 sqrt (-2 *. log u) *. cos (2. *. Float.pi *. (Random.float 1.))
 
+let randn_v n s = Array.init n (fun _ -> rand () *. s)
+let randn_m r c s = Array.init r (fun _ -> randn_v c s
+
+let hippo n =
+Array.init n (fun i -> Array.init n(fun j ->
+if i > j then -. sqrt (float_of_int ((2*i+1) * (2*j+1)))
+else if i = j then -. float_of_int (i+1)
+else 0.))
 
 type ssm = (**)
 type linear = (**)
