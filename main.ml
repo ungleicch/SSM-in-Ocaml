@@ -111,12 +111,48 @@ let s = 1. /. sqrt (float_of_int n) in
   n
   }
 
+let discretize ssm =
+let delta = exp ssm.log_delta in
+let a_bar = mat_exp (mat_scale delta ssm.a_cont) in
+let b_bar = vec_scale delta ssm.b in
+(a_bar, b_bar)
 
-let discretize = (**)
 
-let ssm_fwd = (**)
+let ssm_fwd ssm xs =
+let t = Array.length xs in
+let ab, bb = discretize ssm in
+let hs = Array.make (t + 1) [[]] in
+hs.(0) <- Array.make ssm.n 0;
+for i = 0 to t - 1 do
+hs.(i+1) <- vec_add (mat_vec ab hs.(i)) (vec_scale xs.(i) bb)
+done;
+(hs.(t), hs)
 
-let ssm_bwd = (**)
+let ssm_bwd ssm xs hs d_h_last =
+let t = Array.length xs in
+let delta = exp ssm.log_delta in
+let ab, _ = discretize ssm in
+let ab_t = mat_t ab in
+let d_delta = ref 0. in
+let d_h = Array.copy d_h_last in
+for i = t - 1 downto 0 do
+let x = xs.(i) in
+Array.iteri (fun k g -> d_b_bar.(k) <- d_b_bar.(k) +. g *. x) d_h;
+d_delta := !d_delta +. vec_dot d_h ssm.b *. x;
+d_delta := !d_delta +. vec_dot d_h (mat_vec ssm.a_cont hs.(i));
+let tmp = mat_vec ab_t d_h in
+Array.blit tmp 0 d_h 0 ssm.n
+done;
+
+let d_b = vec_scale delta d_b_bar in
+let d_log_delta = !delta *. delta in
+(d_b, d_log_delta)
+
+type linear = {
+mutable w: float array array;
+mutable b : float array;
+  }
+
 
 let softmax = (**)
 
